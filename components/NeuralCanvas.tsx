@@ -45,9 +45,9 @@ export default function NeuralCanvas() {
       const nodeMat = new THREE.MeshBasicMaterial({ color: 0x7c3aed });
 
       type NodeData = {
-        pos: THREE.Vector3;
-        vel: THREE.Vector3;
-        mesh: THREE.Mesh;
+        pos: InstanceType<typeof THREE.Vector3>;
+        vel: InstanceType<typeof THREE.Vector3>;
+        mesh: InstanceType<typeof THREE.Mesh>;
       };
 
       const nodes: NodeData[] = [];
@@ -148,7 +148,7 @@ export default function NeuralCanvas() {
           }
         }
         lineGeom.setDrawRange(0, c * 2);
-        (lineGeom.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+        (lineGeom.attributes.position as InstanceType<typeof THREE.BufferAttribute>).needsUpdate = true;
 
         renderer.render(scene, camera);
       };

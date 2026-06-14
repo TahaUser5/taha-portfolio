@@ -48,7 +48,11 @@ export default function BackgroundCanvas() {
         color: 0x8B5CF6, transparent: true, opacity: 0.28,
       });
 
-      type NodeData = { pos: THREE.Vector3; vel: THREE.Vector3; mesh: THREE.Mesh };
+      type NodeData = {
+        pos: InstanceType<typeof THREE.Vector3>;
+        vel: InstanceType<typeof THREE.Vector3>;
+        mesh: InstanceType<typeof THREE.Mesh>;
+      };
       const nodes: NodeData[] = [];
 
       for (let i = 0; i < NODE_COUNT; i++) {
@@ -127,7 +131,7 @@ export default function BackgroundCanvas() {
           }
         }
         lineGeom.setDrawRange(0, c * 2);
-        (lineGeom.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+        (lineGeom.attributes.position as InstanceType<typeof THREE.BufferAttribute>).needsUpdate = true;
 
         renderer.render(scene, camera);
       };
