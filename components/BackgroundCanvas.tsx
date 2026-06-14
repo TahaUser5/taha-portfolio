@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+// Statically import only the types for TypeScript's compiler
+import type { Vector3, Mesh, BufferAttribute } from 'three';
 
 /* 30% of NeuralCanvas intensity — 18 nodes (vs 55), lower opacity lines */
 const NODE_COUNT  = 18;
@@ -48,10 +50,11 @@ export default function BackgroundCanvas() {
         color: 0x8B5CF6, transparent: true, opacity: 0.28,
       });
 
+      // Fixed: Using the statically imported Type shapes cleanly here
       type NodeData = {
-        pos: InstanceType<typeof THREE.Vector3>;
-        vel: InstanceType<typeof THREE.Vector3>;
-        mesh: InstanceType<typeof THREE.Mesh>;
+        pos: Vector3;
+        vel: Vector3;
+        mesh: Mesh;
       };
       const nodes: NodeData[] = [];
 
@@ -131,7 +134,8 @@ export default function BackgroundCanvas() {
           }
         }
         lineGeom.setDrawRange(0, c * 2);
-        (lineGeom.attributes.position as InstanceType<typeof THREE.BufferAttribute>).needsUpdate = true;
+        // Fixed: Simplified type casting using static type import
+        (lineGeom.attributes.position as BufferAttribute).needsUpdate = true;
 
         renderer.render(scene, camera);
       };
