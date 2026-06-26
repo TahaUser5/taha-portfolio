@@ -54,17 +54,15 @@ export default function BackgroundCanvas() {
       let renderer: InstanceType<typeof THREE.WebGLRenderer> | null = null;
       try {
         renderer = new THREE.WebGLRenderer({
-          alpha: true,
+          alpha: false,
           antialias: false,
           depth: false,
           stencil: false,
-          powerPreference: 'low-power',
+          powerPreference: 'default',
           failIfMajorPerformanceCaveat: false,
         });
       } catch (err) {
         console.warn('WebGL renderer creation failed, skipping background canvas', err);
-        // Ensure we don't trap a solid fallback on the container if init fails
-        if (container) container.style.backgroundColor = 'transparent';
         return;
       }
 
@@ -76,8 +74,8 @@ export default function BackgroundCanvas() {
       renderer.domElement.style.height = '100%';
       renderer.domElement.style.display = 'block';
       renderer.domElement.style.transform = 'translate3d(0,0,0)';
-      // keep the canvas transparent so the page background shows through
-      renderer.setClearColor(0x000000, 0);
+      // Let Three.js render the solid dark background directly.
+      renderer.setClearColor(0x080810, 1);
       container.appendChild(renderer.domElement);
 
       const group = new THREE.Group();
@@ -190,7 +188,6 @@ export default function BackgroundCanvas() {
           cancelAnimationFrame(animId);
           animId = 0;
         }
-        if (container) container.style.backgroundColor = 'transparent';
         console.warn('WebGL context lost — background animation stopped');
       };
       renderer.domElement.addEventListener('webglcontextlost', onContextLost as EventListener, false);
