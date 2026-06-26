@@ -67,7 +67,7 @@ export default function Hero() {
   }, [text, deleting, roleIdx]);
 
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
       {/* Grid texture */}
       <div
         className="absolute inset-0"
@@ -93,13 +93,13 @@ export default function Hero() {
       <NeuralCanvas />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-20">
+      <div className="relative z-10 text-center max-w-5xl mx-auto pt-16 sm:pt-20 w-full">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-3 mb-8"
+          className="inline-flex items-center gap-3 mb-6 sm:mb-8"
         >
           <span className="flex h-2 w-2 rounded-full bg-electric shadow-electric animate-pulse-slow" />
           <span className="font-mono text-xs tracking-[0.2em] uppercase text-[#9984d4]">
@@ -112,8 +112,8 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35, ease: 'easeOut' }}
-          className="font-display font-bold text-gradient leading-none tracking-tight mb-6"
-          style={{ fontSize: 'clamp(5rem, 10vw, 9rem)', letterSpacing: '-0.02em', textShadow: '0 0 80px rgba(139,92,246,0.6)' }}
+          className="font-display font-bold text-gradient leading-none tracking-tight mb-5 sm:mb-6"
+          style={{ fontSize: 'clamp(3.4rem, 13vw, 9rem)', letterSpacing: '-0.03em', textShadow: '0 0 80px rgba(139,92,246,0.6)' }}
         >
           Taha Tanvir
         </motion.h1>
@@ -123,10 +123,10 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.65 }}
-          className="flex items-center justify-center gap-3 mb-8 h-10"
+          className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 h-10"
         >
-          <span className="text-[#4c2a8a] font-mono text-xl">—</span>
-          <span className="font-mono min-w-[200px] text-left" style={{ fontSize: '1.5rem', color: '#00FF94' }}>
+          <span className="text-[#4c2a8a] font-mono text-lg sm:text-xl">—</span>
+          <span className="font-mono min-w-[170px] sm:min-w-[200px] text-left" style={{ fontSize: 'clamp(1rem, 4.5vw, 1.5rem)', color: '#00FF94' }}>
             {text}
           </span>
           <span className="inline-block w-0.5 h-6 bg-accent-light animate-cursor ml-1" />
@@ -137,7 +137,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-base md:text-lg text-[#9984d4] max-w-xl mx-auto leading-relaxed mb-12"
+          className="text-sm sm:text-base md:text-lg text-[#9984d4] max-w-xl mx-auto leading-relaxed mb-10 sm:mb-12 px-2 sm:px-0"
         >
           Building ML pipelines, deep learning models, and production-ready AI systems —
           from research prototype to deployed application.
@@ -148,13 +148,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.95 }}
-          className="flex flex-wrap items-center justify-center gap-4"
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           <a
             href={personal.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-mono text-sm tracking-wide transition-all duration-200"
+            className="inline-flex items-center gap-2 px-5 sm:px-7 py-3 rounded-full font-mono text-sm tracking-wide transition-all duration-200"
             style={{ background: '#00FF94', color: '#080810', fontWeight: 700, boxShadow: '0 0 24px rgba(0,255,148,0.35)' }}
           >
             <GithubIcon />
@@ -164,7 +164,7 @@ export default function Hero() {
             href={personal.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-mono text-sm tracking-wide transition-all duration-200 text-accent-light hover:bg-accent/10"
+            className="inline-flex items-center gap-2 px-5 sm:px-7 py-3 rounded-full font-mono text-sm tracking-wide transition-all duration-200 text-accent-light hover:bg-accent/10"
             style={{ border: '1px solid rgba(139,92,246,0.4)' }}
           >
             <LinkedInIcon />
@@ -172,7 +172,7 @@ export default function Hero() {
           </a>
           <a
             href={`mailto:${personal.email}`}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-mono text-sm tracking-wide transition-all duration-200 text-accent-light hover:bg-accent/10"
+            className="inline-flex items-center gap-2 px-5 sm:px-7 py-3 rounded-full font-mono text-sm tracking-wide transition-all duration-200 text-accent-light hover:bg-accent/10"
             style={{ border: '1px solid rgba(139,92,246,0.4)' }}
           >
             <MailIcon />
@@ -186,7 +186,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         aria-hidden="true"
       >
         <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[#4c2a8a]">
