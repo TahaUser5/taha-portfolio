@@ -51,13 +51,23 @@ export default function BackgroundCanvas() {
       const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
       camera.position.z = 52;
 
-      const renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: false,
-        depth: false,
-        stencil: false,
-        powerPreference: 'low-power',
-      });
+      let renderer: InstanceType<typeof THREE.WebGLRenderer> | null = null;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          powerPreference: 'low-power',
+          failIfMajorPerformanceCaveat: false,
+        });
+      } catch (err) {
+        console.warn('WebGL renderer creation failed, skipping background canvas', err);
+        // Ensure we don't trap a solid fallback on the container if init fails
+        if (container) container.style.backgroundColor = 'transparent';
+        return;
+      }
+
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxPixelRatio));
       renderer.setSize(w, h, false);
       renderer.domElement.style.position = 'absolute';
@@ -66,7 +76,7 @@ export default function BackgroundCanvas() {
       renderer.domElement.style.height = '100%';
       renderer.domElement.style.display = 'block';
       renderer.domElement.style.transform = 'translate3d(0,0,0)';
-      renderer.domElement.style.backgroundColor = '#080810';
+      // keep the canvas transparent so the page background shows through
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
 
@@ -169,6 +179,21 @@ export default function BackgroundCanvas() {
         syncActivity();
       };
       document.addEventListener('visibilitychange', onVisibilityChange);
+
+      /* Handle context loss on mobile GPUs — stop rendering and make container transparent */
+      const onContextLost = (e: Event) => {
+        try {
+          (e as WebGLContextEvent).preventDefault();
+        } catch (_) {}
+        isActive = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = 0;
+        }
+        if (container) container.style.backgroundColor = 'transparent';
+        console.warn('WebGL context lost — background animation stopped');
+      };
+      renderer.domElement.addEventListener('webglcontextlost', onContextLost as EventListener, false);
 
       /* Scroll parallax — gently shift group.position.y */
       let prevScroll = scrollY;
