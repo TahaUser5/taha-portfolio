@@ -66,7 +66,8 @@ export default function BackgroundCanvas() {
       renderer.domElement.style.height = '100%';
       renderer.domElement.style.display = 'block';
       renderer.domElement.style.transform = 'translate3d(0,0,0)';
-      renderer.setClearColor(0x000000, 0);
+      renderer.domElement.style.backgroundColor = '#080810';
+      renderer.setClearColor(0x080810, 1);
       container.appendChild(renderer.domElement);
 
       const group = new THREE.Group();
@@ -252,6 +253,7 @@ export default function BackgroundCanvas() {
         zIndex: 0, pointerEvents: 'none',
         transform: 'translate3d(0,0,0)',
         contain: 'layout paint size',
+        backgroundColor: '#080810',
       }}
     />
   );

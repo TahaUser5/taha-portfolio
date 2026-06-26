@@ -56,9 +56,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#080810' }}>
       <body
         className={`${syne.variable} ${jakarta.variable} ${mono.variable} bg-[#080810] text-[#F8F8FF] antialiased font-sans`}
+        style={{ backgroundColor: '#080810' }}
       >
         <BackgroundCanvas />
         {/* Fix 8: Global fixed glow accents — passive depth on every section */}
