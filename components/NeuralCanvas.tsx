@@ -17,22 +17,50 @@ export default function NeuralCanvas() {
 
     let mounted = true;
     let animId = 0;
+    let resizeId = 0;
+    let lastFrame = 0;
+    let isVisible = !document.hidden;
+    let isActive = true;
     let doCleanup: (() => void) | null = null;
 
     import('three').then((THREE) => {
       if (!mounted || !container) return;
 
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const coarsePointer = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+      const frameInterval = reduceMotion ? 1000 / 12 : coarsePointer ? 1000 / 30 : 1000 / 60;
+      const maxPixelRatio = coarsePointer ? 1.25 : 2;
+
+      const getViewportSize = () => {
+        const viewport = window.visualViewport;
+        return {
+          width: Math.max(1, Math.round(container.clientWidth || viewport?.width || window.innerWidth)),
+          height: Math.max(1, Math.round(container.clientHeight || viewport?.height || window.innerHeight)),
+        };
+      };
+
       // Scene
       const scene = new THREE.Scene();
-      const w = container.clientWidth || window.innerWidth;
-      const h = container.clientHeight || window.innerHeight;
+      const { width: w, height: h } = getViewportSize();
 
       const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
       camera.position.z = 42;
 
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(w, h);
+      const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        depth: false,
+        stencil: false,
+        powerPreference: 'low-power',
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxPixelRatio));
+      renderer.setSize(w, h, false);
+      renderer.domElement.style.position = 'absolute';
+      renderer.domElement.style.inset = '0';
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
+      renderer.domElement.style.display = 'block';
+      renderer.domElement.style.transform = 'translate3d(0,0,0)';
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
 
@@ -85,33 +113,99 @@ export default function NeuralCanvas() {
       const lineSegs = new THREE.LineSegments(lineGeom, lineMat);
       group.add(lineSegs);
 
-      // Mouse parallax (subtle)
+      // Pointer/touch parallax with a mobile-safe fallback.
       let mx = 0;
       let my = 0;
-      const onMouse = (e: MouseEvent) => {
-        mx = (e.clientX / window.innerWidth - 0.5) * 2;
-        my = (e.clientY / window.innerHeight - 0.5) * 2;
+      let targetMx = 0;
+      let targetMy = 0;
+
+      const updateTarget = (clientX: number, clientY: number) => {
+        const { width, height } = getViewportSize();
+        targetMx = (clientX / width - 0.5) * 2;
+        targetMy = (clientY / height - 0.5) * 2;
       };
-      window.addEventListener('mousemove', onMouse);
+
+      const onPointerMove = (event: PointerEvent) => {
+        updateTarget(event.clientX, event.clientY);
+      };
+
+      const onMouse = (event: MouseEvent) => {
+        updateTarget(event.clientX, event.clientY);
+      };
+
+      const onTouchMove = (event: TouchEvent) => {
+        const touch = event.touches[0] ?? event.changedTouches[0];
+        if (!touch) return;
+        updateTarget(touch.clientX, touch.clientY);
+      };
+
+      const supportsPointerEvents = typeof window !== 'undefined' && 'PointerEvent' in window;
+
+      if (supportsPointerEvents) {
+        window.addEventListener('pointermove', onPointerMove, { passive: true });
+        window.addEventListener('pointerdown', onPointerMove, { passive: true });
+      } else {
+        window.addEventListener('mousemove', onMouse, { passive: true });
+        window.addEventListener('touchstart', onTouchMove, { passive: true });
+        window.addEventListener('touchmove', onTouchMove, { passive: true });
+      }
 
       const onResize = () => {
-        if (!container) return;
-        const nw = container.clientWidth;
-        const nh = container.clientHeight;
-        camera.aspect = nw / nh;
-        camera.updateProjectionMatrix();
-        renderer.setSize(nw, nh);
+        if (resizeId) return;
+        resizeId = window.requestAnimationFrame(() => {
+          resizeId = 0;
+          const { width: nw, height: nh } = getViewportSize();
+          camera.aspect = nw / nh;
+          camera.updateProjectionMatrix();
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxPixelRatio));
+          renderer.setSize(nw, nh, false);
+        });
       };
-      window.addEventListener('resize', onResize);
+      window.addEventListener('resize', onResize, { passive: true });
+      window.visualViewport?.addEventListener('resize', onResize, { passive: true });
+      window.visualViewport?.addEventListener('scroll', onResize, { passive: true });
 
-      const animate = () => {
+      const intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          syncActivity();
+        },
+        { threshold: 0.01 },
+      );
+      intersectionObserver.observe(container);
+
+      const syncActivity = () => {
+        const shouldRun = isVisible && !document.hidden && !reduceMotion;
+        if (shouldRun === isActive) return;
+        isActive = shouldRun;
+        if (isActive && !animId) {
+          lastFrame = 0;
+          animId = requestAnimationFrame(animate);
+        } else if (!isActive && animId) {
+          cancelAnimationFrame(animId);
+          animId = 0;
+        }
+      };
+
+      const onVisibilityChange = () => {
+        syncActivity();
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+
+      const animate = (now: number) => {
+        if (!isActive || document.hidden || reduceMotion) return;
         animId = requestAnimationFrame(animate);
+
+        if (now - lastFrame < frameInterval) return;
+        lastFrame = now;
 
         // Slow rotation
         group.rotation.y += 0.0007;
         group.rotation.x += 0.0002;
 
         // Camera parallax
+        mx += (targetMx - mx) * 0.08;
+        my += (targetMy - my) * 0.08;
         camera.position.x += (mx * 5 - camera.position.x) * 0.025;
         camera.position.y += (-my * 5 - camera.position.y) * 0.025;
         camera.lookAt(0, 0, 0);
@@ -153,11 +247,23 @@ export default function NeuralCanvas() {
         renderer.render(scene, camera);
       };
 
-      animate();
+      onResize();
+      animId = requestAnimationFrame(animate);
 
       doCleanup = () => {
+        intersectionObserver.disconnect();
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        if (supportsPointerEvents) {
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerdown', onPointerMove);
+        }
         window.removeEventListener('mousemove', onMouse);
+        window.removeEventListener('touchstart', onTouchMove);
+        window.removeEventListener('touchmove', onTouchMove);
         window.removeEventListener('resize', onResize);
+        window.visualViewport?.removeEventListener('resize', onResize);
+        window.visualViewport?.removeEventListener('scroll', onResize);
+        if (resizeId) cancelAnimationFrame(resizeId);
         cancelAnimationFrame(animId);
         if (container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
@@ -172,6 +278,8 @@ export default function NeuralCanvas() {
 
     return () => {
       mounted = false;
+      isActive = false;
+      if (resizeId) cancelAnimationFrame(resizeId);
       cancelAnimationFrame(animId);
       doCleanup?.();
     };
@@ -182,6 +290,7 @@ export default function NeuralCanvas() {
       ref={containerRef}
       className="absolute inset-0 pointer-events-none"
       aria-hidden="true"
+      style={{ transform: 'translate3d(0,0,0)', contain: 'layout paint size' }}
     />
   );
 }

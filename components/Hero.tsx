@@ -67,7 +67,7 @@ export default function Hero() {
   }, [text, deleting, roleIdx]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       {/* Grid texture */}
       <div
         className="absolute inset-0"
