@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#080810' }}>
       <body
         className={`${syne.variable} ${jakarta.variable} ${mono.variable} bg-[#080810] text-[#F8F8FF] antialiased font-sans`}
-        style={{ backgroundColor: '#080810' }}
+        style={{ backgroundColor: '#080810', position: 'relative' }}
       >
         <GridBackground />
         {/* Fix 8: Global fixed glow accents — passive depth on every section */}
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             pointerEvents: 'none', zIndex: 0,
           }}
         />
-        {children}
+        <div className="relative z-10">{children}</div>
       </body>
     </html>
   );

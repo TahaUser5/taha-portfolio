@@ -4,7 +4,7 @@ export default function GridBackground() {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: -1,
+        zIndex: 0,
         backgroundColor: '#080810',
         overflow: 'hidden',
         pointerEvents: 'none',
