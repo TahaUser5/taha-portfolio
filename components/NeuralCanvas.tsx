@@ -288,9 +288,17 @@ export default function NeuralCanvas() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none"
+      className="pointer-events-none"
       aria-hidden="true"
-      style={{ transform: 'translate3d(0,0,0)', contain: 'layout paint size' }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100dvh',
+        zIndex: 0,
+        backgroundColor: '#080810',
+      }}
     />
   );
 }

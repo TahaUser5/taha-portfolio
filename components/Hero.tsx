@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { personal } from '@/data/portfolio';
-
-const NeuralCanvas = dynamic(() => import('./NeuralCanvas'), { ssr: false });
 
 const ROLES = [
   'AI Engineer',
@@ -98,9 +95,6 @@ export default function Hero() {
         }}
         aria-hidden="true"
       />
-
-      {/* Three.js Neural Canvas */}
-      <NeuralCanvas />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto pt-2 sm:pt-8 md:pt-20 w-full">

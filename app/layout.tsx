@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import { Syne, Plus_Jakarta_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
-import GridBackground from '@/components/GridBackground';
+
+const NeuralCanvas = dynamic(() => import('@/components/NeuralCanvas'), {
+  ssr: false,
+});
 
 const syne = Syne({
   subsets: ['latin'],
@@ -60,7 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${syne.variable} ${jakarta.variable} ${mono.variable} bg-[#080810] text-[#F8F8FF] antialiased font-sans`}
         style={{ backgroundColor: '#080810', position: 'relative' }}
       >
-        <GridBackground />
+        <NeuralCanvas />
         {/* Fix 8: Global fixed glow accents — passive depth on every section */}
         <div
           aria-hidden="true"
