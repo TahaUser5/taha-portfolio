@@ -16,10 +16,12 @@ export default function Navigation() {
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
   const [active,   setActive]     = useState('');
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
+    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -50,11 +52,11 @@ export default function Navigation() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
+          scrolled || isTouchDevice
             ? 'border-b border-[rgba(139,92,246,0.12)]'
             : 'bg-transparent'
         }`}
-        style={scrolled ? { background: 'rgba(3,3,8,0.85)', backdropFilter: 'blur(20px)' } : {}}
+        style={scrolled || isTouchDevice ? { background: 'rgba(3,3,8,0.88)', backdropFilter: 'blur(20px)' } : {}}
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}

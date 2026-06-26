@@ -67,7 +67,7 @@ export default function Hero() {
   }, [text, deleting, roleIdx]);
 
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
+    <section className="relative min-h-[100svh] flex items-start md:items-center justify-center overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 md:pt-0">
       {/* Grid texture */}
       <div
         className="absolute inset-0"
@@ -75,6 +75,16 @@ export default function Hero() {
           backgroundImage:
             'linear-gradient(rgba(139,92,246,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.07) 1px, transparent 1px)',
           backgroundSize: '64px 64px',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Mobile-safe dark backdrop so the hero never washes out if the canvas under-renders */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 100% 70% at 50% 18%, rgba(139,92,246,0.18) 0%, rgba(8,8,16,0.92) 48%, rgba(8,8,16,0.98) 100%)',
         }}
         aria-hidden="true"
       />
@@ -93,7 +103,7 @@ export default function Hero() {
       <NeuralCanvas />
 
       {/* Content */}
-      <div className="relative z-10 text-center max-w-5xl mx-auto pt-16 sm:pt-20 w-full">
+      <div className="relative z-10 text-center max-w-5xl mx-auto pt-2 sm:pt-8 md:pt-20 w-full">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -186,7 +196,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-80"
         aria-hidden="true"
       >
         <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[#4c2a8a]">
