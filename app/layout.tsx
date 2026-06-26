@@ -1,13 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 import { Syne, Plus_Jakarta_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
-
-const BackgroundCanvas = dynamic(
-  () => import('@/components/BackgroundCanvas'),
-  { ssr: false },
-);
+import GridBackground from '@/components/GridBackground';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -54,6 +49,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  themeColor: '#080810',
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth" style={{ backgroundColor: '#080810' }}>
@@ -61,7 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${syne.variable} ${jakarta.variable} ${mono.variable} bg-[#080810] text-[#F8F8FF] antialiased font-sans`}
         style={{ backgroundColor: '#080810' }}
       >
-        <BackgroundCanvas />
+        <GridBackground />
         {/* Fix 8: Global fixed glow accents — passive depth on every section */}
         <div
           aria-hidden="true"

@@ -271,10 +271,13 @@ export default function BackgroundCanvas() {
       ref={containerRef}
       aria-hidden="true"
       style={{
-        position: 'fixed', inset: 0,
-        zIndex: 0, pointerEvents: 'none',
-        transform: 'translate3d(0,0,0)',
-        contain: 'layout paint size',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100dvh',
+        zIndex: -1,
+        pointerEvents: 'none',
         backgroundColor: '#080810',
       }}
     />
