@@ -67,7 +67,7 @@ export default function BackgroundCanvas() {
       renderer.domElement.style.display = 'block';
       renderer.domElement.style.transform = 'translate3d(0,0,0)';
       renderer.domElement.style.backgroundColor = '#080810';
-      renderer.setClearColor(0x080810, 1);
+      renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
 
       const group = new THREE.Group();
@@ -188,7 +188,7 @@ export default function BackgroundCanvas() {
 
         group.rotation.y += 0.0003;
 
-        for (let i = 0; i < NODE_COUNT; i++) {
+        for (let i = 0; i < nodeCount; i++) {
           const { pos, vel, mesh } = nodes[i];
           pos.x += vel.x; pos.y += vel.y; pos.z += vel.z;
           if (Math.abs(pos.x) > BOUNDS) vel.x *= -1;
