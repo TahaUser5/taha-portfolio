@@ -51,7 +51,7 @@ export default function NeuralCanvas() {
         antialias: true,
         depth: false,
         stencil: false,
-        powerPreference: 'low-power',
+        powerPreference: 'default',
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxPixelRatio));
       renderer.setSize(w, h, false);
