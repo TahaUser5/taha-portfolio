@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { Syne, Plus_Jakarta_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
 
-const NeuralCanvas = dynamic(() => import('@/components/NeuralCanvas'), {
+const BackgroundCanvas = dynamic(() => import('@/components/BackgroundCanvas'), {
   ssr: false,
 });
 
@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${syne.variable} ${jakarta.variable} ${mono.variable} bg-[#080810] text-[#F8F8FF] antialiased font-sans`}
         style={{ backgroundColor: '#080810', position: 'relative' }}
       >
-        <NeuralCanvas />
+        <BackgroundCanvas />
         {/* Fix 8: Global fixed glow accents — passive depth on every section */}
         <div
           aria-hidden="true"
