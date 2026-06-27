@@ -84,7 +84,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             pointerEvents: 'none', zIndex: 0,
           }}
         />
-        <div className="relative z-10 overflow-x-hidden">{children}</div>
+        <div className="relative z-10">{children}</div>
       </body>
     </html>
   );
